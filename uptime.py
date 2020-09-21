@@ -1,10 +1,7 @@
 import requests
 import psycopg2
-import json
-import re
 import pagespeed
 from dynaconf import settings
-
 
 class Base:
 
@@ -49,9 +46,9 @@ class Base:
     def checker(self):
         ran = range(1, Base.all_rows(()))
         for num in ran:
-            item = Base.base_marker((),num)
-            site = item.get('site')
             try:
+                item = Base.base_marker((), num)
+                site = item.get('site')
                 r = requests.get(site)
                 status = r.status_code
                 if status == 200:
@@ -61,22 +58,29 @@ class Base:
                     error = 404
                     basestatus = False
             except requests.exceptions.SSLError:
-                basestatus = False
                 error = 000
-            except requests.exceptions.ConnectionError:
                 basestatus = False
+            except requests.exceptions.ConnectionError:
                 error = 500
+                basestatus = False
+            except IndexError:
+                continue
+            item = Base.base_marker((),num)
+            site = item.get('site')
             Base.set_error((), num, error)
             Base.change_status((), num, basestatus)
 
             print(f'least: {Base.all_rows(())-num   }| site: {site}| status: {error}')
 
-    def pagespeed(self, start, end):
-        ran = range(start, end)
+    def pagespeed(self):
+        ran = range(1, Base.all_rows(()))
         for num in ran:
-            item = Base.base_marker((),num)
-            site = item.get('site')
-            time = pagespeed.ps(site)
-            if time is not None:
-                Base.set_time((), time,num)
+            try:
+                item = Base.base_marker((),num)
+                site = item.get('site')
+                time = pagespeed.ps(site)
+                if time is not None:
+                    Base.set_time((), time,num)
                 print(f'module: Pagespeed | least: {Base.all_rows(())-num} | site: {site} | status: {time}')
+            except IndexError:
+                continue
