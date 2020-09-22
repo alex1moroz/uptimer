@@ -3,9 +3,6 @@ import re
 from check import Data
 import time
 from dynaconf import settings
-import os
-from flask import Flask, request
-import logging
 
 
 token = settings.TGTOKEN
@@ -76,21 +73,4 @@ def check(message):
     bot.send_message(message.chat.id, text)
 
 
-if "HEROKU" in list(os.environ.keys()):
-    logger = telebot.logger
-    telebot.logger.setLevel(logging.INFO)
-
-    server = Flask(__name__)
-    @server.route("/bot", methods=['POST'])
-    def getMessage():
-        bot.process_new_updates([telebot.types.Update.de_json(request.stream.read().decode("utf-8"))])
-        return "!", 200
-    @server.route("/")
-    def webhook():
-        bot.remove_webhook()
-        bot.set_webhook(url="https://uptimerbot.herokuapp.com/bot")
-        return "?", 200
-    server.run(host="0.0.0.0", port=os.environ.get('PORT', 80))
-else:
-    bot.remove_webhook()
-    bot.polling(none_stop=True)
+bot.polling(none_stop=True)
