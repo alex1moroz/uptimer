@@ -10,6 +10,8 @@ requests = "*"
 dynaconf = "*"
 pytelegrambotapi = "*"
 psycopg2-binary = "*"
+flask = "*"
+gunicorn = "*"
 
 [requires]
 python_version = "3.8"

@@ -1,8 +1,13 @@
-import telebot
-import re
-from check import Data
+import os
 import time
+import telebot
+from telebot import types
 from dynaconf import settings
+import flask
+from flask import Flask, request
+from check import Data
+
+server = Flask(__name__)
 
 
 token = settings.TGTOKEN
@@ -73,4 +78,19 @@ def check(message):
     bot.send_message(message.chat.id, text)
 
 
-bot.polling(none_stop=True)
+
+@server.route('/' + token, methods=['POST'])
+def get_message():
+    bot.process_new_updates([types.Update.de_json(flask.request.stream.read().decode("utf-8"))])
+    return "!", 200
+
+
+@server.route('/', methods=["GET"])
+def index():
+    bot.remove_webhook()
+    bot.set_webhook(url="https://{}.herokuapp.com/{}".format('uptimer', token))
+    return "Hello from Heroku!", 200
+
+
+if __name__ == "__main__":
+    server.run(host="0.0.0.0", port=int(os.environ.get('PORT', 5000)))
