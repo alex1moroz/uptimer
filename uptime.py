@@ -65,12 +65,10 @@ class Base:
                 basestatus = False
             except IndexError:
                 continue
-            item = Base.base_marker((),num)
-            site = item.get('site')
             Base.set_error((), num, error)
             Base.change_status((), num, basestatus)
 
-            print(f'least: {Base.all_rows(())-num   }| site: {site}| status: {error}')
+            print(f'least: {Base.all_rows(())-num   }| site: {site} | status: {error}')
 
     def pagespeed(self):
         ran = range(1, Base.all_rows(()))
