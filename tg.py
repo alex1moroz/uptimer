@@ -3,6 +3,10 @@ import re
 from check import Data
 import time
 from dynaconf import settings
+import os
+from flask import Flask, request
+import logging
+
 
 token = settings.TGTOKEN
 
@@ -72,18 +76,21 @@ def check(message):
     bot.send_message(message.chat.id, text)
 
 
-# @bot.message_handler(content_types=['text'], commands=['add'])
-# def send_text(message):
-#     bot.send_message(message.chat.id, 'Добавьте автора и ссылку на страницу \nАвтор url')
-#     data = re.match(r'\S+', message.text)
-#     name = data.group(0)
-#     url = data.group(1)
-#     ask = f'Записываем следующие данные:\n{name} - автор страницы,\n{url} - ссылка на странцу'
-#     bot.send_message(message.chat.id, ask)
-#     bot.answer_callback_query()
-#     if answer == "Да":
-#         Data.add_row(author=name, url=url)
-#
-#     return author
+if "HEROKU" in list(os.environ.keys()):
+    logger = telebot.logger
+    telebot.logger.setLevel(logging.INFO)
 
-bot.polling(none_stop=True, interval=0)
+    server = Flask(__name__)
+    @server.route("/bot", methods=['POST'])
+    def getMessage():
+        bot.process_new_updates([telebot.types.Update.de_json(request.stream.read().decode("utf-8"))])
+        return "!", 200
+    @server.route("/")
+    def webhook():
+        bot.remove_webhook()
+        bot.set_webhook(url="https://uptimerbot.herokuapp.com/bot")
+        return "?", 200
+    server.run(host="0.0.0.0", port=os.environ.get('PORT', 80))
+else:
+    bot.remove_webhook()
+    bot.polling(none_stop=True)

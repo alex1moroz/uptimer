@@ -9,7 +9,8 @@ verify_ssl = true
 requests = "*"
 dynaconf = "*"
 pytelegrambotapi = "*"
-psycopg2 = "*"
+psycopg2-binary = "*"
+flask = "*"
 
 [requires]
 python_version = "3.8"
