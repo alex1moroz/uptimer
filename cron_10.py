@@ -1,5 +1,4 @@
 from uptime import Base
-#привет маша
 
 print('Запуск процесса')
 Base.checker(())
