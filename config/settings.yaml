@@ -5,3 +5,5 @@ default:
   DBPASS: '7F3yr98!'
   PSTOKEN: 'AIzaSyBBPIg9RhqhPfZFNiwtNqVaijZiUJCUKkc'
   TGTOKEN: '1124233516:AAGM_htHVW95qXsQzb0C8e3zE1TGsi2u6nI'
+  HEROKU: 'ad9b55f8-438d-4c27-b1d2-e2fadc0c5c23'
+  HEROKU_APP: 'uptimer'

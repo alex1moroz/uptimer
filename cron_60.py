@@ -1,5 +1,5 @@
-from uptime import Base
-from threading import Thread
+from base.uptime import Base
+
 #
 # def even_or_odd(num):
 #     if num % 2 == 0:
