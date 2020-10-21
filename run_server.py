@@ -1,6 +1,6 @@
 import flask
 from telebot import types
-from telegram.bot import bot
+from telegram.bot_handlers import bot
 from dynaconf import settings
 import os
 
