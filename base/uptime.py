@@ -96,6 +96,7 @@ class Base:
                 if time is not None:
                     Base.set_time((), time,num)
                 print(f'module: Pagespeed | least: {Base.all_rows(())-num} | site: {site} | status: {time}')
+                Base.conn.commit()
             except IndexError:
                 continue
 
